@@ -37,7 +37,7 @@ function run_reframe {
     . /etc/profile.d/modules.sh
     mkdir -p ${SCRATCH_DIR}/reports
     ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
-
+    echo "status: $?"
 }
 
 function check_reframe {
