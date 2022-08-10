@@ -2,7 +2,7 @@
 set -ex
 
 # Determine the OS version
-CYCLECLOUD_SPEC_PATH=/mnt/cluster-init/cc-reframe/scheduler
+#CYCLECLOUD_SPEC_PATH=/mnt/cluster-init/cc-reframe/scheduler
 version=`/bin/bash ${CYCLECLOUD_SPEC_PATH}/files/common.sh`
 
 if [ "$version" == "almalinux-8" ]
