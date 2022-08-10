@@ -21,7 +21,7 @@ def get_physicalhostname():
 
 def main():
     #print("{} physicalhostname = {}".format(hostname,get_physicalhostname()))
-    get_physicalhostname()
+    print("{}".format(get_physicalhostname()))
 
 if __name__ == "__main__":
        main()

@@ -15,7 +15,7 @@ then
 elif [ "$version" == "centos-7" ]
 then
     export PATH=/opt/rh/rh-python38/root/usr/bin:$PATH
-    #ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3
+    ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3
     reframe_cfg="azure_centos_7.py"
 elif [ "$version" == "centos-8" ]
 then
