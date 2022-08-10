@@ -20,8 +20,8 @@ def get_physicalhostname():
            return str(value[0])[2:][:-1]
 
 def main():
-    print("{} physicalhostname = {}".format(hostname,get_physicalhostname()))
-
+    #print("{} physicalhostname = {}".format(hostname,get_physicalhostname()))
+    get_physicalhostname()
 
 if __name__ == "__main__":
        main()
