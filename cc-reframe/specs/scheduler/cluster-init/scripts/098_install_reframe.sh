@@ -14,6 +14,7 @@ then
     yum install -y rh-python38-python
     yum install -y rh-python38-python-pip
     export PATH=/opt/rh/rh-python38/root/usr/bin:$PATH
+    #ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3.8
 elif [ "$version" == "centos-8" ]
 then
     yum install -y python38 python38-pip

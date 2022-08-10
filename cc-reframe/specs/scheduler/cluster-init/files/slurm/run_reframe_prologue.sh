@@ -49,7 +49,7 @@ function check_reframe {
     /opt/cycle/jetpack/bin/jetpack log "$HOSTNAME:$vmId:$status"
 
     # Place the node in a drained state
-    scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status"
+    #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status"
 
     # If possible, trigger IcM ticket and get it out of rotation
 }
