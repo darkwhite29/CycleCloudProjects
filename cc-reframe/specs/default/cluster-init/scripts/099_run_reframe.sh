@@ -46,11 +46,14 @@ function check_reframe {
     # Get VM ID
     vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
 
+    # Get physical hostname
+    physicalHostname=$(python3 ../files/get_physicalhostname.py)
+
     # Get Reframe error
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
 
     # Add the VM ID and error to the jetpack log
-    jetpack log "$HOSTNAME:$vmId:$status"
+    jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
 
     # Keep the VM up
     jetpack keepalive forever
