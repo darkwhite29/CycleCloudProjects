@@ -53,14 +53,14 @@ function check_reframe {
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
 
     # Add the VM ID and error to the jetpack log
-    #jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
+    jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
 
     # Keep the VM up
-    #jetpack keepalive forever
+    jetpack keepalive forever
 
     # If possible, trigger IcM ticket and get it out of rotation
 }
 
-trap check_reframe ERR
+#trap check_reframe ERR
 
-run_reframe
+#run_reframe
