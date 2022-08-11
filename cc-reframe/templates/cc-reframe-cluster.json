@@ -48,7 +48,7 @@
   "nct4v3_machine_type" : "Standard_NC64as_T4_v3",
   "nca100v4_max_cores" : 1536,
   "nct4v3_image_name" : "microsoft-dsvm:ubuntu-hpc:1804:latest",
-  "SubnetId" : "litan2eastus/litan2eastus-vmVNET/litan2eastus-vmSubnet",
+  "SubnetId" : "litan2eastusj/litan2eastusj-vmVNET/litan2eastusj-vmSubnet",
   "hbv3_image_name" : "OpenLogic:CentOS-HPC:7_9-gen2:latest",
   "nct4v3_init_specs" : null,
   "hbv3_init_specs" : null,
