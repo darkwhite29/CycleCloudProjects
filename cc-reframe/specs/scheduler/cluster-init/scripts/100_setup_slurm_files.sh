@@ -14,4 +14,4 @@ chmod 755 ${PROLOGUE_DIR}/*
 echo "Prolog=${PROLOGUE_DIR}/run_reframe_prologue.sh" >> /sched/slurm.conf
 
 # Do we need to restart slurmctld?
-#systemctl restart slurmctld
+systemctl restart slurmctld

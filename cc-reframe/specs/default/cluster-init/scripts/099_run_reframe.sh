@@ -61,6 +61,6 @@ function check_reframe {
     # If possible, trigger IcM ticket and get it out of rotation
 }
 
-#trap check_reframe ERR
+trap check_reframe ERR
 
-#run_reframe
+run_reframe

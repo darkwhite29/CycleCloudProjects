@@ -14,7 +14,7 @@ then
     yum install -y rh-python38-python
     yum install -y rh-python38-python-pip
     export PATH=/opt/rh/rh-python38/root/usr/bin:$PATH
-    #ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3.8
+    ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3
 elif [ "$version" == "centos-8" ]
 then
     yum install -y python38 python38-pip
@@ -30,6 +30,6 @@ rm -rf reframe
 git clone https://github.com/JonShelley/reframe.git
 cd reframe
 
-python3.8 -m venv reframe_venv
+python3 -m venv reframe_venv
 source reframe_venv/bin/activate
-./bootstrap.sh -P python3.8
+./bootstrap.sh -P python3
