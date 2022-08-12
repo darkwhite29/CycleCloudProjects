@@ -56,13 +56,16 @@ function check_reframe {
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
     echo "$physicalHostname::level2" >> ${SCRATCH_DIR}/reframe_healthcheck_physicalnode
 
-    # Keep the VM up
-    jetpack keepalive forever
+    # Shut down healthy VMs by themselves, and keep the unhealthy ones up
+    if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
+        shutdown -n now
+    else
+        jetpack keepalive forever
+    fi
 
     # If possible, trigger IcM ticket and get it out of rotation
 }
 
 #trap check_reframe ERR
-check_reframe
-
 run_reframe
+check_reframe
