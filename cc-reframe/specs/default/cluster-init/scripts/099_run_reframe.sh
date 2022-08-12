@@ -54,6 +54,7 @@ function check_reframe {
 
     # Add the VM ID and error to the jetpack log
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
+    echo "$physicalHostname::level2" >> ${SCRATCH_DIR}/reframe_healthcheck_physicalnode
 
     # Keep the VM up
     jetpack keepalive forever
@@ -61,6 +62,7 @@ function check_reframe {
     # If possible, trigger IcM ticket and get it out of rotation
 }
 
-trap check_reframe ERR
+#trap check_reframe ERR
+check_reframe
 
 run_reframe
