@@ -15,7 +15,7 @@ then
 elif [ "$version" == "centos-7" ]
 then
     export PATH=/opt/rh/rh-python38/root/usr/bin:$PATH
-    ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3
+    #ln -s /opt/rh/rh-python38/root/usr/bin/python3.8 /usr/bin/python3
     reframe_cfg="azure_centos_7.py"
 elif [ "$version" == "centos-8" ]
 then
@@ -47,7 +47,7 @@ function check_reframe {
     vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
 
     # Get physical hostname
-    physicalHostname=$(python3 ../files/get_physicalhostname.py)
+    physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
 
     # Get Reframe error
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
@@ -58,7 +58,7 @@ function check_reframe {
 
     # Shut down healthy VMs by themselves, and keep the unhealthy ones up
     if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
-        shutdown -n now
+        shutdown now
     else
         jetpack keepalive forever
     fi
