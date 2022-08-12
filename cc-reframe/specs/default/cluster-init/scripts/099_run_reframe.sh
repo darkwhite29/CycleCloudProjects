@@ -57,11 +57,11 @@ function check_reframe {
     echo "$physicalHostname::level2" >> ${SCRATCH_DIR}/reframe_physicalnode_record
 
     # Shut down healthy VMs by themselves, and keep the unhealthy ones up
-    ##if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
-    ##    sudo shutdown now
-    ##else
-    ##    jetpack keepalive forever
-    ##fi
+    if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
+        scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
+    else
+        jetpack keepalive forever
+    fi
 
     # If possible, trigger IcM ticket and get it out of rotation
 }
