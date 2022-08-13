@@ -58,7 +58,7 @@ function check_reframe {
 
     # Shut down healthy VMs by themselves, and keep the unhealthy ones up
     if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
-        hostname #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
+        jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
     else
         jetpack keepalive forever
     fi
