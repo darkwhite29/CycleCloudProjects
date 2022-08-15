@@ -59,10 +59,10 @@ function check_reframe {
     if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
 	target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
 	if [ -z $target_entry ]; then
-            echo "$physicalHostname::level2::Y1::N0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
+            echo "$physicalHostname:level2:P1:F0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	else
-	    count=$(echo $target_entry | cut -d:: -f3)
-	    updated_entry="$physicalHostname::level2::Y$((++count))::N0"
+	    count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
+	    updated_entry="$physicalHostname:level2:P$((++count)):F0"
 	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
         jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
