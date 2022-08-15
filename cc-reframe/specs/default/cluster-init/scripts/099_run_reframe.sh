@@ -55,18 +55,25 @@ function check_reframe {
     # Add the VM ID and error to the jetpack log
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
 
-    # Shut down healthy VMs by themselves, and keep the unhealthy ones up
+    # Shut down healthy VMs, keep unhealthy ones up, and record pass/fail count of physical nodes
+    target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
+    pass_count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
+    fail_count=$(echo $target_entry | cut -d: -f4 | cut -dF -f2)
     if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
-	target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
 	if [ -z $target_entry ]; then
             echo "$physicalHostname:level2:P1:F0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	else
-	    count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
-	    updated_entry="$physicalHostname:level2:P$((++count)):F0"
+	    updated_entry="$physicalHostname:level2:P$((++pass_count)):F$fail_count"
 	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
         jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
     else
+	if [ -z $target_entry ]; then
+	    echo "$physicalHostname:level2:P0:F1" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
+        else
+	    updated_entry="$physicalHostname:level2:P$pass_count:F$((++fail_count))"
+	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
+	fi
         jetpack keepalive forever
     fi
 
