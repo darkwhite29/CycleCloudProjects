@@ -54,10 +54,17 @@ function check_reframe {
 
     # Add the VM ID and error to the jetpack log
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
-    echo "$physicalHostname::level2" >> ${SCRATCH_DIR}/reframe_physicalnode_record
 
     # Shut down healthy VMs by themselves, and keep the unhealthy ones up
     if [ $(echo $status | cut -d: -f1) -eq 0 ]; then
+	target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
+	if [ -z $target_entry ]; then
+            echo "$physicalHostname::level2::Y1::N0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
+	else
+	    count=$(echo $target_entry | cut -d:: -f3)
+	    updated_entry="$physicalHostname::level2::Y$((++count))::N0"
+	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
+	fi
         jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
     else
         jetpack keepalive forever
