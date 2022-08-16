@@ -39,23 +39,14 @@ function run_reframe {
     mkdir -p ${SCRATCH_DIR}/reports
     ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
     echo "status: $?"
-}
 
-function check_reframe {
-    echo "Hello check_reframe"
     # Get VM ID
     vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
-
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
-
     # Get Reframe error
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
-
-    # Add the VM ID and error to the jetpack log
-    jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
-
-    # Shut down healthy VMs, keep unhealthy ones up, and record pass/fail count of physical nodes
+    # Shut down healthy VMs, keep unhealthy ones up, and record pass/fail count of physical nodes (only send fail info to users in CycleCloud GUI)
     target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
     pass_count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
     fail_count=$(echo $target_entry | cut -d: -f4 | cut -dF -f2)
@@ -74,12 +65,25 @@ function check_reframe {
 	    updated_entry="$physicalHostname:level2:P$pass_count:F$((++fail_count))"
 	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
+        jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status" # Save fail info to CycleCloud GUI, CycleCloud Event Log, and /opt/cycle_server/logs/cycle_server.log at CycleCloud server
         jetpack keepalive forever
     fi
+}
 
+function check_reframe {
+    echo "Hello check_reframe"
+    # Get VM ID
+    vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
+    # Get physical hostname
+    physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
+    # Get Reframe error
+    status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
+    # Add the VM ID and error to the jetpack log
+    jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
+    # Keep the VM up
+    jetpack keepalive forever
     # If possible, trigger IcM ticket and get it out of rotation
 }
 
-#trap check_reframe ERR
+trap check_reframe ERR
 run_reframe
-check_reframe
