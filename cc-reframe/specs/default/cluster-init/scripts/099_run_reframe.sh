@@ -50,8 +50,8 @@ function run_reframe {
     target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
     pass_count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
     fail_count=$(echo $target_entry | cut -d: -f4 | cut -dF -f2)
-    echo "$physicalHostname:$status" >> ${SCRATCH_DIR}/reports/test
     if [[ $(echo $status | cut -d: -f1) == "0" ]]; then
+        echo "$physicalHostname:$status" >> ${SCRATCH_DIR}/reports/test
 	if [[ -z $target_entry ]]; then
             echo "$physicalHostname:level2:P1:F0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	else
