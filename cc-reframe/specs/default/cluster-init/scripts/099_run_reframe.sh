@@ -51,10 +51,10 @@ function run_reframe {
     pass_count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
     fail_count=$(echo $target_entry | cut -d: -f4 | cut -dF -f2)
     if [[ $(echo $status | cut -d: -f1) == "0" ]]; then
-        echo "$physicalHostname:$status" >> ${SCRATCH_DIR}/reports/test
 	if [[ -z $target_entry ]]; then
             echo "$physicalHostname:level2:P1:F0" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	else
+	    echo "$physicalHostname:$status" >> ${SCRATCH_DIR}/reports/test
 	    updated_entry="$physicalHostname:level2:P$((++pass_count)):F$fail_count"
 	    sed -i 's/$target_entry/$updated_entry/' ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
