@@ -41,7 +41,7 @@ function run_reframe {
     echo "status: $?"
 
     # Get VM ID
-    vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
+    vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId' | tr -d '"')
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
     # Get Reframe error
@@ -73,7 +73,7 @@ function run_reframe {
 function check_reframe {
     echo "Hello check_reframe"
     # Get VM ID
-    vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId')
+    vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId' | tr -d '"')
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
     # Get Reframe error
