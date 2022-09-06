@@ -34,17 +34,20 @@ function run_reframe {
     . reframe_venv/bin/activate
     . share/completions/reframe.bash
 
-    # Run reframe tests
-    . /etc/profile.d/modules.sh
-    mkdir -p ${SCRATCH_DIR}/reports
-    ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
-    echo "status: $?"
-
     # Get VM ID
     vmId=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2019-06-04" | jq '.compute.vmId' | tr -d '"')
+    # Run ReFrame tests
+    . /etc/profile.d/modules.sh
+    mkdir -p ${SCRATCH_DIR}/reports
+    ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
+    echo "status: $?"
+
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
-    # Get Reframe error
+    target_entry=$(cat ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json | grep hostname)
+    updated_entry="    \"physical node ID\": \"$physicalHostname\","
+    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json
+    # Get Reframe errors
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
     # Shut down healthy VMs, keep unhealthy ones up, and record pass/fail count of physical nodes (only send fail info to users in CycleCloud GUI)
     target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
