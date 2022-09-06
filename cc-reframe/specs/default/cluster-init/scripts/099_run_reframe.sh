@@ -39,16 +39,18 @@ function run_reframe {
     # Run ReFrame tests
     . /etc/profile.d/modules.sh
     mkdir -p ${SCRATCH_DIR}/reports
-    ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
+    ./bin/reframe -C azure_nhc/config/${reframe_cfg} --force-local --report-file ${SCRATCH_DIR}/reports/${vmId}-cc-startup.json -c azure_nhc/run_level_2 -R -s ${SCRATCH_DIR}/stage/${HOSTNAME} -o ${SCRATCH_DIR}/output/${HOSTNAME} -r --performance-report
     echo "status: $?"
 
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
-    target_entry=$(cat ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json | grep hostname)
+    cd ${SCRATCH_DIR}/reports
+    target_entry=$(cat ${vmID}-cc-startup.json | grep hostname)
     updated_entry="    \"physical node ID\": \"$physicalHostname\","
-    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/${vmID}-cc-startup.json
+    sed -i "s/$target_entry/$updated_entry/" ${vmID}-cc-startup.json
+    tar -czvf reframe.tgz *.json
     # Get Reframe errors
-    status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
+    status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${vmId}-cc-startup.json)
     # Shut down healthy VMs, keep unhealthy ones up, and record pass/fail count of physical nodes (only send fail info to users in CycleCloud GUI)
     target_entry=$(cat ${SCRATCH_DIR}/reports/reframe_physicalnode_record | grep $physicalHostname)
     pass_count=$(echo $target_entry | cut -d: -f3 | cut -dP -f2)
@@ -80,7 +82,7 @@ function check_reframe {
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
     # Get Reframe error
-    status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${HOSTNAME}-cc-startup.json)
+    status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${vmId}-cc-startup.json)
     # Add the VM ID and error to the jetpack log
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
     # Keep the VM up
