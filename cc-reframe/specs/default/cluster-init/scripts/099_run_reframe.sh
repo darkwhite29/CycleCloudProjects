@@ -46,7 +46,7 @@ function run_reframe {
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
     cd ${SCRATCH_DIR}/reports
     target_entry=$(cat ${vmId}-cc-startup.json | grep hostname)
-    updated_entry="    \"physical node ID\": \"$physicalHostname\","
+    updated_entry="    \"physical_node_ID\": \"$physicalHostname\","
     sed -i "s/$target_entry/$updated_entry/" ${vmId}-cc-startup.json
     tar -czvf reframe.tgz *.json
     # Get Reframe errors
