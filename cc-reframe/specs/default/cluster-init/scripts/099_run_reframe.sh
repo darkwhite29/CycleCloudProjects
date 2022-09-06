@@ -45,9 +45,9 @@ function run_reframe {
     # Get physical hostname
     physicalHostname=$(python3 /mnt/cluster-init/cc-reframe/default/files/get_physicalhostname.py)
     cd ${SCRATCH_DIR}/reports
-    target_entry=$(cat ${vmID}-cc-startup.json | grep hostname)
+    target_entry=$(cat ${vmId}-cc-startup.json | grep hostname)
     updated_entry="    \"physical node ID\": \"$physicalHostname\","
-    sed -i "s/$target_entry/$updated_entry/" ${vmID}-cc-startup.json
+    sed -i "s/$target_entry/$updated_entry/" ${vmId}-cc-startup.json
     tar -czvf reframe.tgz *.json
     # Get Reframe errors
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${vmId}-cc-startup.json)
