@@ -71,6 +71,7 @@ function run_reframe {
 	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
         jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status" # Save fail info to CycleCloud GUI, CycleCloud Event Log, and /opt/cycle_server/logs/cycle_server.log at CycleCloud server
+	echo "$HOSTNAME::$physicalHostname::$vmId::$status" >> ${SCRATCH_DIR}/reports/reframe_failure_record # As a backup
         jetpack keepalive forever
     fi
 }
@@ -85,6 +86,7 @@ function check_reframe {
     status=$(python3 ${REFRAME_DIR}/azure_nhc/utils/check_reframe_report.py -f ${SCRATCH_DIR}/reports/${vmId}-cc-startup.json)
     # Add the VM ID and error to the jetpack log
     jetpack log "$HOSTNAME::$physicalHostname::$vmId::$status"
+    echo "$HOSTNAME::$physicalHostname::$vmId::$status" >> ${SCRATCH_DIR}/reports/reframe_failure_record
     # Keep the VM up
     jetpack keepalive forever
     # If possible, trigger IcM ticket and get it out of rotation
