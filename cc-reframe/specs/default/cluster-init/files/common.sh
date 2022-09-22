@@ -9,7 +9,7 @@ then
     echo "$ID-${majVer[0]}"
 elif [ "$ID" == "ubuntu" ]
 then
-    echo "ID: $ID"
+    echo "$ID"
 elif [ "$ID" == "centos" ]
 then
     echo -n "$ID" 
