@@ -18,6 +18,14 @@ then
 elif [ "$version" == "centos-8" ]
 then
     yum install -y python38 python38-pip
+elif [ "$version" == "ubuntu" ]
+then
+    apt install -y python3 python3-pip
 fi
 
-yum install -y git jq
+if [ "$version" == "ubuntu" ]
+then
+    apt install -y git jq
+else
+    yum install -y git jq
+fi
