@@ -13,7 +13,7 @@ chmod 755 ${PROLOGUE_DIR}/*
 # Configure Slurm prologue
 echo "Prolog=${PROLOGUE_DIR}/run_reframe_prologue.sh" >> /sched/slurm.conf
 # Disable Slurm autoscaling
-echo "SuspendExcParts=-1" >>/sched/slurm.conf
+echo "SuspendExcParts=-1" >> /sched/slurm.conf
 
 # Restart slurmctld to make changes to Slurm take effect
 systemctl restart slurmctld
