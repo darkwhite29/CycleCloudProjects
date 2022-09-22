@@ -63,7 +63,7 @@ function run_reframe {
 	    updated_entry="$physicalHostname:level2:P$((++pass_count)):F$fail_count"
 	    sed -i "s/$target_entry/$updated_entry/" ${SCRATCH_DIR}/reports/reframe_physicalnode_record
 	fi
-        jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
+        #jetpack shutdown --idle #scontrol update nodename=$HOSTNAME state=DRAIN Reason="$status" #sudo shutdown now
     else
 	if [[ -z $target_entry ]]; then
 	    echo "$physicalHostname:level2:P0:F1" >> ${SCRATCH_DIR}/reports/reframe_physicalnode_record
