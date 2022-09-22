@@ -5,7 +5,8 @@ SCRATCH_DIR=/shared/azure_nhc/scratch
 mkdir -p $SCRATCH_DIR
 
 # Determine the OS version
-version=`/bin/bash ${REFRAME_DIR}/azure_nhc/utils/common.sh`
+#version=`/bin/bash ${REFRAME_DIR}/azure_nhc/utils/common.sh`
+version=`/bin/bash ${CYCLECLOUD_SPEC_PATH}/files/common.sh`
 export PATH=/opt/cycle/jetpack/bin:$PATH
 
 reframe_cfg="azure_ex.py"
@@ -20,7 +21,7 @@ then
 elif [ "$version" == "centos-8" ]
 then
     reframe_cfg="azure_centos_8.py"
-elif [ "$version" == "ubuntu-20" ]
+elif [ "$version" == "ubuntu" ]
 then
     reframe_cfg="azure_ubuntu_20.py"
 fi
