@@ -6,7 +6,7 @@ mkdir -p $SCRATCH_DIR
 
 # Determine the OS version
 #version=`/bin/bash ${REFRAME_DIR}/azure_nhc/utils/common.sh`
-version=`/bin/bash /mnt/cluster-init/cc-reframe/default/files/common.sh`
+version=`/bin/bash ${CYCLECLOUD_SPEC_PATH}/files/common.sh`
 export PATH=/opt/cycle/jetpack/bin:$PATH
 
 reframe_cfg="azure_ex.py"
